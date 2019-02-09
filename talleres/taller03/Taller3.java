@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Collections;
-
 /**
  * Clase en la cual se implementan los metodos del Taller 3
  *
@@ -13,20 +10,20 @@ public class Taller3 {
 
     private static void nReinas(int n, int[] tablero, int c) {
         if(c == n) {
-            if(!seAtacanHastaIoNo(tablero, c)) {
+            if(!seAtacanHastaCoNo(tablero, c)) {
                 imprimirTablero(tablero);
             }
         } else {
             for (int i = 0; i < n; i++) {
                 tablero[c] = i;
-                if(!seAtacanHastaIoNo(tablero, c)) {
+                if(!seAtacanHastaCoNo(tablero, c)) {
                     nReinas(n, tablero, c+1);
                 }
             }
         }
     }
 
-    private static boolean seAtacanHastaIoNo(int[] tablero, int c) {
+    private static boolean seAtacanHastaCoNo(int[] tablero, int c) {
         for(int i = 0; i < c-1; i++) {
             for(int j = i+1; j < c; j++) {
                 if(pendiente(i, j, tablero[i], tablero[j])) {
