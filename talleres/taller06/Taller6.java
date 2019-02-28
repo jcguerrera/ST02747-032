@@ -37,13 +37,18 @@ public class Taller6 {
         boolean[] visitados = new boolean[g.size()];
         
         for(int i = 0; i < g.size(); i++) {
+            int menor = Integer.MAX_VALUE;
             visitados[i] = true;
             ArrayList<Integer> hijos = g.getSuccessors(i);
-            int menor = Integer.MAX_VALUE;
-            for(int j = 0; j < hijos.size(); j++) {
-                if(!visitados[j] && g.getWeight(i, hijos.get(j)) < menor) { 
-                    menor = g.getWeight(i, hijos.get(j));
+            
+            for (int j = 0; j < hijos.size(); j++) {
+                int peso = g.getWeight(i, hijos.get(j));
+                
+                if(!visitados[hijos.get(j)] && peso < menor) {
+                    System.out.println("Entra");
+                    menor = peso;
                 }
+                //System.out.println(i + " " + j + " " + hijos.get(j) + " " + g.getWeight(hijos.get(j), i));
             }
             respuesta += menor;
         }
@@ -51,7 +56,7 @@ public class Taller6 {
         return respuesta;
     }
     
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         DigraphAL g1 = new DigraphAL(5);
 		g1.addArc(0, 1, 2);
 		g1.addArc(0, 2, 2);
@@ -74,7 +79,7 @@ public class Taller6 {
 		g1.addArc(4, 2, 2);
 		g1.addArc(4, 3, 4);
 		System.out.println(recorrido(g1));
-
+                
 		DigraphAL g2 = new DigraphAL(4);
 		g2.addArc(0, 2, 15);
 		g2.addArc(2, 0, 15);
@@ -92,7 +97,8 @@ public class Taller6 {
 		g2.addArc(1, 1, 0);
 		g2.addArc(2, 2, 0);
 		g2.addArc(3, 3, 0);
-		System.out.println(recorrido(g2));
+                System.out.println(recorrido(g2));
+		
 
 		DigraphAL g3 = new DigraphAL(4);
 		g3.addArc(0, 0, 0);
@@ -111,8 +117,6 @@ public class Taller6 {
 		g3.addArc(3, 1, 4);
 		g3.addArc(3, 2, 8);
 		g3.addArc(3, 3, 0);
-		System.out.println(recorrido(g3));
-		
-		
+                System.out.println(recorrido(g3));
     }
 }
