@@ -11,13 +11,12 @@ public class Taller7 {
 
     private int elMasPequenoNoVisitado(Digraph g, boolean[] visitados, int[] tabla){
         int menor = Integer.MAX_VALUE;
-        int min = -1;
+        
         for (int i = 0; i <tabla.length ; i++) {
             if(!visitados[i]&& menor <= tabla[i])
                 menor = tabla[i];
-                min = i;
         }
-        return min;
+        return menor;
     }
 
     private void actualizarLosPesosDeLaTablaConElValorActual(Digraph g, int actual, int[] tabla){
