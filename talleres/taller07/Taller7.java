@@ -20,12 +20,12 @@ public class Taller7 {
     }
 
     private void actualizarLosPesosDeLaTablaConElValorActual(Digraph g, int actual, int[] tabla){
-        if((tabla[actual] != Integer.MAX_VALUE)){
-            ArrayList<Integer> arr = g.getSuccessors(actual);
-            for(int i = 0; i < arr.size(); i++){
-                if(actual != i && g.getWeight(actual,i) != Integer.MAX_VALUE && (g.getWeight(actual,i)+tabla[actual])<tabla[i]){
-                    tabla[i] = tabla[actual] + g.getWeight(actual,i);
-                }
+        for(int destino: g.getSuccessors(actual)){
+            if(tabla[destino] != Integer.MAX_VALUE){
+                tabla[destino] += g.getWeight(actual, destino);
+            }
+            else{
+                tabla[destino] = g.getWeight(actual,destino);
             }
         }
     }
