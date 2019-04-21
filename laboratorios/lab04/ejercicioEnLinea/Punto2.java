@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 
 
 public class Punto2 {
@@ -9,48 +10,13 @@ public class Punto2 {
         lectura();
     }
 
-    // Necesario?
-    private static void sort(String[] a) {
-
-    }
-
-    private static int minimo(int n, int d, int r, String[] a, String[] b, boolean[] v) {
+    private static int minimo(int n, int d, int r, int[] a, int[] b) {
         int horasExtra = 0;
-        int saveI = 0;
 
         for(int index = 0; index < n; index++) {
-            boolean exacto = false;
-            int menor = Integer.MAX_VALUE;
-
-            for (int i = 0; i < n; i++) {
-                if(!v[i]) {
-                    int sum = Integer.parseInt(a[index]) + Integer.parseInt(b[i]);
-                    if (sum == d) {
-                        v[i] = true;
-                        exacto = true;
-                        break;
-                    } else if(sum > d) {
-                        if(menor < d || (menor > d && sum < menor)) {
-                            menor = sum;
-                            saveI = i;
-                        }
-                    } else {
-                        if(menor < d || menor == Integer.MAX_VALUE) {
-                            if(sum > menor) {
-                                menor = sum;
-                                saveI = i;
-                            } else if(menor == Integer.MAX_VALUE) {
-                                menor = sum;
-                                saveI = i;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if(!exacto && menor > d) {
-                horasExtra += Math.abs(menor - d);
-                v[saveI] = true;
+            int sum = a[index] + b[n-index-1];
+            if(sum > d) {
+                horasExtra += Math.abs(sum - d);
             }
         }
 
@@ -58,9 +24,12 @@ public class Punto2 {
     }
 
     private static void lectura() {
+        int lineaExcepcion = 0;
         int n, d, r;
         String[] a;
         String[] b;
+        int[] aInt;
+        int[] bInt;
 
         try {
             File dataset = new File("dataset.txt");
@@ -69,21 +38,37 @@ public class Punto2 {
 
             String linea;
             while((linea=br.readLine()) != "0 0 0") {
+                lineaExcepcion++;
                 String[] arr = linea.split(" ");
                 n = Integer.parseInt(arr[0]);
                 d = Integer.parseInt(arr[1]);
                 r = Integer.parseInt(arr[2]);
 
                 linea = br.readLine();
+                lineaExcepcion++;
+                if(linea == null) break;
                 a = linea.split(" ");
+                aInt = new int[n];
 
                 linea = br.readLine();
+                lineaExcepcion++;
                 b = linea.split(" ");
+                bInt = new int[n];
 
-                System.out.println(minimo(n, d, r, a, b, new boolean[n]));
+                for(int i = 0; i < n; i++) {
+                    aInt[i] = Integer.parseInt(a[i]);
+                    bInt[i] = Integer.parseInt(b[i]);
+                }
+
+                Arrays.sort(aInt);
+                Arrays.sort(bInt);
+
+                System.out.println(minimo(n, d, r, aInt, bInt));
             }
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Error leyendo el archivo en línea: " + lineaExcepcion);
+        }
     }
 
 }
