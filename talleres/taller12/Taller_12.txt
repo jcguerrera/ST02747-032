@@ -1,0 +1,66 @@
+import java.lang.reflect.*;
+import java.util.Arrays;
+
+public class Taller_12 {
+
+    public static void main(String[] args) {
+        //System.out.println(Arrays.toString(HillClimb(4)));
+        imprimirTablero(HillClimb(8), 8);
+    }
+
+    static class Pair<F, S> {
+
+        public final F first;
+        public final S second;
+
+        public Pair(F first, S second) {
+            this.first = first;
+            this.second = second;
+        }
+
+    }
+
+    public static int[] HillClimb(int n) {
+        int c = Integer.MAX_VALUE;
+        int [] tablero = new int [n];
+        int [] min = new int [n];
+        for (int i = 0;i < n;i++){
+            for (int j = 0;j < n;j++){
+                tablero[i] = j;
+                int temp = reinasAtacandose(tablero);
+                if (temp < c){
+                    c = temp;
+                    min = Arrays.copyOf(tablero,tablero.length);
+                }
+            }
+            tablero = Arrays.copyOf(min,tablero.length);
+        }
+        return min;
+    }
+
+ 
+    public static int reinasAtacandose(int[] tablero) {
+        int count = 0;
+        boolean [] visited_pos = new boolean[tablero.length];
+        for (int i = 0; i <tablero.length ; i++) {
+            for (int j = 0; j < tablero.length; j++) {
+                if (i==j||tablero[i]== tablero[j]||Math.abs(tablero[i] - tablero[j]) == Math.abs(i - j) && visited_pos[i]==false && visited_pos[j]==false)
+                    count ++;
+            }
+            visited_pos[i] = true;
+        }
+        return count;
+    }
+
+    public static void imprimirTablero(int[] tablero,int n) {
+        System.out.print("  ");
+        for (int i = 0; i < n; ++i) System.out.print(i + " ");
+        System.out.print("\n");
+        for (int i = 0; i < n; ++i) {
+            System.out.print(i + " ");
+            for (int j = 0; j < n; ++j) System.out.print((tablero[i] == j ? "Q" : "#") + " ");
+            System.out.println();
+        }
+        System.out.println();
+    }
+}
