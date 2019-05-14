@@ -2,9 +2,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Stack;
 
 public class Main {
+
     public static void main(String[] args) {
         DigraphAM graph = readFile(205, 1.3);
     }
@@ -31,16 +34,16 @@ public class Main {
         return graph;
     }
 
-    private void szs() {
+    private void mierdaEneCuadrado(DigraphAM g) {
+        ArrayList<Estudiante> arrEst = new ArrayList();
 
-    }
-
-    /**
-    private static void printGraph(DigraphAM g) {
-        for(int i = 1; i < g.size(); i++) {
-            System.out.println(1 + " " + i + " " + g.getWeight(1,i));
+        for(int i = 2; i <= g.size(); i++) {
+            Estudiante e = new Estudiante(i, g.getWeight(1, i));
+            arrEst.add(e);
         }
+
+        Estudiante[] arr = arrEst.toArray();
     }
-     */
+
 
 }
