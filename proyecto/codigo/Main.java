@@ -3,13 +3,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        DigraphAM graph = readFile(205, 1.3);
+        Scanner in = new Scanner(System.in);
+        int U = in.nextInt();
+        double p = in.nextDouble();
+        in.close();
+        DigraphAM graph = readFile(U, p);
+        carAssignment(graph, p);
     }
 
     private static DigraphAM readFile(int u, double p) {
@@ -34,16 +38,58 @@ public class Main {
         return graph;
     }
 
-    private void mierdaEneCuadrado(DigraphAM g) {
-        ArrayList<Estudiante> arrEst = new ArrayList();
+    private static Estudiante[] successorsSort(DigraphAM g, ArrayList<Integer> succArr, int ini) {
+        Estudiante[] eArr = new Estudiante[succArr.size()];
 
-        for(int i = 2; i <= g.size(); i++) {
-            Estudiante e = new Estudiante(i, g.getWeight(1, i));
-            arrEst.add(e);
+        for(int i = 0; i < succArr.size(); i++) {
+            int vertex = succArr.get(i);
+            eArr[i] = new Estudiante(vertex, g.getWeight(ini, vertex));
         }
 
-        Estudiante[] arr = arrEst.toArray();
+        Arrays.sort(eArr, new SortWeight());
+        return eArr;
     }
 
+    private static void carAssignment(DigraphAM g, double p) {
+        Estudiante[] eafitScc = successorsSort(g, g.getSuccessors(1), 1);
+        boolean[] visited = new boolean[g.size()];
+
+        for(int i = eafitScc.length-1; i >= 0; i--) {
+            ArrayList<Estudiante> car = new ArrayList();
+            Estudiante driver = eafitScc[i];
+            int node = driver.getNode();
+            if(!visited[driver.getNode()-1]) car.add(driver);
+            visited[node-1] = true;
+
+            int acumWeight = 0;
+            double maxWeight = driver.getWeight() * p;
+
+            Estudiante[] driverScc = successorsSort(g, g.getSuccessors(node), node);
+
+            for(int j = 0; j < driverScc.length; j++) {
+                Estudiante passenger = driverScc[j];
+                int pathWeight = g.getWeight(node, passenger.getNode());
+
+                if(!visited[passenger.getNode()-1]) {
+                    if((acumWeight + pathWeight) + passenger.getWeight() < maxWeight) {
+                        acumWeight+=pathWeight;
+                        car.add(passenger);
+                        visited[passenger.getNode()-1] = true;
+                        node = passenger.getNode();
+                        if(car.size() == 5) break;
+                    }
+                }
+            }
+
+            if(car.size() > 0) printCars(car);
+        }
+    }
+
+    private static void printCars(ArrayList<Estudiante> arr) {
+        for(Estudiante e : arr) {
+            System.out.print(e.getNode() + " ");
+        }
+        System.out.println();
+    }
 
 }

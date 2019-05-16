@@ -1,19 +1,16 @@
 public class Estudiante {
     int node;
-    int peso;
-    boolean visitado;
-    boolean recogido;
+    int weight;
+    boolean picked;
 
-    public Estudiante(int node, int peso) {
+    public Estudiante(int node, int weight) {
         this.node = node;
-        this.peso = peso;
-        this.visitado = false;
-        this.recogido = false;
+        this.weight = weight;
+        this.picked = false;
     }
 
-    public void setVisitadoTrue() {
-        this.visitado = true;
-    }
-    public void setRecogidoTrue() { this.recogido = true; }
-    public int getPeso() { return this.peso; }
+    public void setPicked() { this.picked = true; }
+    public boolean getPicked() { return this.picked; }
+    public int getNode() { return this.node; }
+    public int getWeight() { return this.weight; }
 }
