@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -13,7 +14,8 @@ public class Main {
         double p = in.nextDouble();
         in.close();
         DigraphAM graph = readFile(U, p);
-        carAssignment(graph, p);
+        ArrayList<ArrayList<Estudiante>> cars = carAssignment(graph, p);
+        saveFile(cars, U, p);
     }
 
     private static DigraphAM readFile(int u, double p) {
@@ -38,6 +40,24 @@ public class Main {
         return graph;
     }
 
+
+    private static void saveFile (ArrayList<ArrayList<Estudiante>> arr, int u, double p) {
+        try {
+            PrintWriter wr = new PrintWriter("respuesta-dataset-ejemplo-U=" + u + "-p=" + p + ".txt", "UTF-8");
+            for (ArrayList<Estudiante> a: arr){
+                for(Estudiante e : a) {
+                    wr.print(e.getNode() + " ");
+                }
+                wr.println();
+            }
+            wr.close();
+        }
+        catch(Exception e) {
+            System.out.println("Error escribiendo el archivo de salida: " + e.getMessage() );
+        }
+    }
+
+
     private static Estudiante[] successorsSort(DigraphAM g, ArrayList<Integer> succArr, int ini) {
         Estudiante[] eArr = new Estudiante[succArr.size()];
 
@@ -50,46 +70,43 @@ public class Main {
         return eArr;
     }
 
-    private static void carAssignment(DigraphAM g, double p) {
-        Estudiante[] eafitScc = successorsSort(g, g.getSuccessors(1), 1);
+    private static ArrayList<ArrayList<Estudiante>> carAssignment(DigraphAM g, double p) {
+        ArrayList<ArrayList<Estudiante>> totCars = new ArrayList();
+        Estudiante[] destinationScc = successorsSort(g, g.getSuccessors(1), 1);
         boolean[] visited = new boolean[g.size()];
+        visited[0] = true;
 
-        for(int i = eafitScc.length-1; i >= 0; i--) {
+        for(int i = destinationScc.length-1; i >= 0; i--) {
             ArrayList<Estudiante> car = new ArrayList();
-            Estudiante driver = eafitScc[i];
+            Estudiante driver = destinationScc[i];
             int node = driver.getNode();
-            if(!visited[driver.getNode()-1]) car.add(driver);
-            visited[node-1] = true;
+            if (!visited[driver.getNode() - 1]) car.add(driver);
+            visited[node - 1] = true;
 
             int acumWeight = 0;
             double maxWeight = driver.getWeight() * p;
 
-            Estudiante[] driverScc = successorsSort(g, g.getSuccessors(node), node);
+            ArrayList<Integer> driverScc = g.getSuccessors(driver.getNode());
 
-            for(int j = 0; j < driverScc.length; j++) {
-                Estudiante passenger = driverScc[j];
-                int pathWeight = g.getWeight(node, passenger.getNode());
+            for (int j = 0; j < driverScc.size(); j++) {
+                int passenger = driverScc.get(j);
+                int pathWeight = g.getWeight(node, passenger);
 
-                if(!visited[passenger.getNode()-1]) {
-                    if((acumWeight + pathWeight) + passenger.getWeight() < maxWeight) {
-                        acumWeight+=pathWeight;
-                        car.add(passenger);
-                        visited[passenger.getNode()-1] = true;
-                        node = passenger.getNode();
-                        if(car.size() == 5) break;
+                if (!visited[passenger - 1]) {
+                    if ((acumWeight + pathWeight) + g.getWeight(1, passenger) < maxWeight) {
+                        acumWeight += pathWeight;
+                        car.add(new Estudiante(passenger, 0));
+                        visited[passenger - 1] = true;
+                        node = passenger;
+                        if (car.size() == 5) break;
                     }
                 }
             }
 
-            if(car.size() > 0) printCars(car);
+            if(car.size()>0) totCars.add(car);
         }
-    }
 
-    private static void printCars(ArrayList<Estudiante> arr) {
-        for(Estudiante e : arr) {
-            System.out.print(e.getNode() + " ");
-        }
-        System.out.println();
+        return totCars;
     }
 
 }
