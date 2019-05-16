@@ -1,4 +1,8 @@
 public class Estudiante {
+    /**
+     * Clase estudiante que contiene la informacion del nodo y el peso que hay de cada uno
+     * al punto destino
+     */
     int node;
     int weight;
     boolean picked;

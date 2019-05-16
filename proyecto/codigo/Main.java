@@ -6,8 +6,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * @author Juan Camilo Guerrero, Santiago Pulgarin, Juan Jose Escudero
+ */
 public class Main {
-
+    /**
+     *
+     * @param args
+     * Metodo que ejecuta el algoritmo
+     */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int U = in.nextInt();
@@ -18,6 +25,14 @@ public class Main {
         saveFile(cars, U, p);
     }
 
+    /**
+     *
+     * @param u Numero de nodos
+     * @param p Constante de tiempo
+     * @return grafo g
+     * Metodo empleado para leer y guardar el archivo en una matriz de adyacencia
+     */
+
     private static DigraphAM readFile(int u, double p) {
         DigraphAM graph = new DigraphAM(u+1);
 
@@ -26,9 +41,9 @@ public class Main {
             BufferedReader br = new BufferedReader(new FileReader(new File(arch)));
 
             String line = br.readLine();
-                for(int i = 0; i < 3; i++) { line = br.readLine(); }
-                for(int i = 0; i < u; i++) { line = br.readLine(); }
-                for(int i = 0; i < 3; i++) { line = br.readLine(); }
+            for(int i = 0; i < 3; i++) { line = br.readLine(); }
+            for(int i = 0; i < u; i++) { line = br.readLine(); }
+            for(int i = 0; i < 3; i++) { line = br.readLine(); }
 
             while((line = br.readLine()) != null) {
                 String[] linePart = line.split(" ");
@@ -40,7 +55,13 @@ public class Main {
         return graph;
     }
 
-
+    /**
+     *
+     * @param arr Arraylist que contiene cada carro y sus pasajeros
+     * @param u Numero de nodos
+     * @param p Constante de tiempo
+     * Metodo de escritura del archivo respuesta
+     */
     private static void saveFile (ArrayList<ArrayList<Estudiante>> arr, int u, double p) {
         try {
             PrintWriter wr = new PrintWriter("respuesta-dataset-ejemplo-U=" + u + "-p=" + p + ".txt", "UTF-8");
@@ -57,7 +78,13 @@ public class Main {
         }
     }
 
-
+    /**
+     *
+     * @param g Grafo
+     * @param succArr Sucesores del nodo
+     * @param ini Node
+     * @return Arreglo del objeto estudiantes ordenado
+     */
     private static Estudiante[] successorsSort(DigraphAM g, ArrayList<Integer> succArr, int ini) {
         Estudiante[] eArr = new Estudiante[succArr.size()];
 
@@ -70,6 +97,12 @@ public class Main {
         return eArr;
     }
 
+    /**
+     *
+     * @param g Grafo
+     * @param p Constante p
+     * @return Arraylist que contiene cada carro con sus psajeros
+     */
     private static ArrayList<ArrayList<Estudiante>> carAssignment(DigraphAM g, double p) {
         ArrayList<ArrayList<Estudiante>> totCars = new ArrayList();
         Estudiante[] destinationScc = successorsSort(g, g.getSuccessors(1), 1);
